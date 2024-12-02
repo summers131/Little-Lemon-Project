@@ -1,7 +1,14 @@
-import React from 'react';
+
 import { Link } from 'react-router-dom'; // Importing Link for navigation
 
-const footerSections = [
+type LinkType = {
+  name?: string;
+  text?: string;
+  href: string;
+  type?: 'text' | 'tel' | 'mailto';
+};
+
+const footerSections: { title: string; links: LinkType[] }[] = [
   {
     title: 'Navigation',
     links: [
@@ -16,7 +23,7 @@ const footerSections = [
   {
     title: 'Contact',
     links: [
-      { type: 'text', text: 'Address: Chicago, IL' },
+      { type: 'text', text: 'Address: Chicago, IL', href: '#' },
       { type: 'tel', text: 'Phone: (123) 456-7890', href: 'tel:+11234567890' },
       { type: 'mailto', text: 'Email: info@littlelemon.com', href: 'mailto:info@littlelemon.com' }
     ]
@@ -33,37 +40,35 @@ const footerSections = [
 
 export function Footer() {
   return (
-    <footer className="bg-[#495E57] text-white py-6"> {/* Adjusted padding */}
+    <footer className="bg-[#495E57] text-white py-6">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:justify-between gap-8">
-          <div className="flex flex-col md:w-[30%] order-1"> {/* Adjusted width to move more left */}
+          <div className="flex flex-col md:w-[30%] order-1">
             <img src="/logo.png" alt="Little Lemon Logo" className="h-12 w-auto" />
             <p className="mt-4 text-gray-300">
               We are a family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.
             </p>
           </div>
           <div className="md:w-1/2 order-2">
-            {footerSections[0].title === 'Navigation' && (
-              <div key={footerSections[0].title}>
-                <h3 className="text-lg font-semibold mb-4">{footerSections[0].title}</h3>
-                <ul className="grid grid-cols-3 gap-2 space-y-2">
-                  {footerSections[0].links.map(link => (
-                    <li key={link.name} className="col-span-1">
-                      <Link to={link.href} className="text-gray-300 hover:text-yellow-400 transition-colors duration-200">
-                        {link.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            <div key={footerSections[0].title}>
+              <h3 className="text-lg font-semibold mb-4">{footerSections[0].title}</h3>
+              <ul className="grid grid-cols-3 gap-2 space-y-2">
+                {footerSections[0].links.map(link => (
+                  <li key={link.href} className="col-span-1">
+                    <Link to={link.href} className="text-gray-300 hover:text-yellow-400 transition-colors duration-200">
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-          <div className="flex flex-col md:w-1/4 order-3"> {/* Adjusted width to balance layout */}
+          <div className="flex flex-col md:w-1/4 order-3">
             <div>
               <h3 className="text-lg font-semibold mb-4">Contact</h3>
               <ul className="space-y-2">
                 {footerSections[1].links.map(link => (
-                  <li key={link.text}>
+                  <li key={link.href}>
                     {link.type === 'text' ? (
                       <span className="text-gray-300">{link.text}</span>
                     ) : (
@@ -81,7 +86,7 @@ export function Footer() {
               <h3 className="text-lg font-semibold mb-4">Social Media</h3>
               <ul className="space-y-2">
                 {footerSections[2].links.map(link => (
-                  <li key={link.name}>
+                  <li key={link.href}>
                     <a href={link.href} target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-yellow-400 transition-colors duration-200">
                       {link.name}
                     </a>

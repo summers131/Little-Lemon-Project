@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { Specials } from './components/Specials';
-import { BookingForm } from './components/BookingForm';
+import Booking from './components/Booking';
+// import { BookingForm } from './components/BookingForm';
 import { Footer } from './components/Footer';
 import UnderConstruction from './components/UnderConstruction';
 import LoginForm from './components/LoginForm'; // Importing LoginForm
@@ -30,7 +31,7 @@ function App() {
             <Route path="/" element={<Hero />} />
             <Route path="/about" element={<AboutUs />} /> {/* Updating AboutUs route */}
             <Route path="/menu" element={<UnderConstruction />} />
-            <Route path="/reservations" element={<BookingForm />} />
+            <Route path="/reservations" element={<Booking />} />
             <Route path="/order" element={<UnderConstruction />} />
             <Route path="/login" element={<LoginForm onLogin={handleLogin} />} /> {/* Adding LoginForm route */}
             <Route path="/signup" element={<SignupForm onSignup={handleSignup} />} /> {/* Adding SignupForm route */}

@@ -1,29 +1,43 @@
-import React, { useState } from 'react';
+// src/components/BookingForm.tsx
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import { Button } from './ui/Button';
 
-interface BookingFormData {
+interface BookingFormInputs {
   date: string;
   time: string;
   guests: number;
   occasion: string;
 }
 
+const schema = yup.object().shape({
+  date: yup.string().required('Date is required'),
+  time: yup.string().required('Time is required'),
+  guests: yup.number()
+    .typeError('Number of guests is required')
+    .min(1, 'At least 1 guest')
+    .max(10, 'Maximum 10 guests')
+    .required('Number of guests is required'),
+  occasion: yup.string().required('Occasion is required'),
+});
+
 export function BookingForm() {
-  const [formData, setFormData] = useState<BookingFormData>({
-    date: '',
-    time: '',
-    guests: 2,
-    occasion: ''
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<BookingFormInputs>({
+    resolver: yupResolver(schema),
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
+  const onSubmit: SubmitHandler<BookingFormInputs> = (data) => {
+    console.log('Form submitted:', data);
+    // Handle form submission logic
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto py-10">
+    <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl mx-auto py-10">
       <div className="space-y-10">
         <div>
           <label htmlFor="date" className="block text-lg font-medium text-gray-700">
@@ -32,11 +46,10 @@ export function BookingForm() {
           <input
             type="date"
             id="date"
-            value={formData.date}
-            onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+            {...register('date')}
             className="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
-            required
           />
+          {errors.date && <span className="text-red-600">{errors.date.message}</span>}
         </div>
 
         <div>
@@ -45,10 +58,8 @@ export function BookingForm() {
           </label>
           <select
             id="time"
-            value={formData.time}
-            onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+            {...register('time')}
             className="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
-            required
           >
             <option value="">Select a time</option>
             <option value="17:00">17:00</option>
@@ -58,6 +69,7 @@ export function BookingForm() {
             <option value="21:00">21:00</option>
             <option value="22:00">22:00</option>
           </select>
+          {errors.time && <span className="text-red-600">{errors.time.message}</span>}
         </div>
 
         <div>
@@ -69,11 +81,10 @@ export function BookingForm() {
             id="guests"
             min="1"
             max="10"
-            value={formData.guests}
-            onChange={(e) => setFormData({ ...formData, guests: parseInt(e.target.value) })}
+            {...register('guests')}
             className="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
-            required
           />
+          {errors.guests && <span className="text-red-600">{errors.guests.message}</span>}
         </div>
 
         <div>
@@ -82,8 +93,7 @@ export function BookingForm() {
           </label>
           <select
             id="occasion"
-            value={formData.occasion}
-            onChange={(e) => setFormData({ ...formData, occasion: e.target.value })}
+            {...register('occasion')}
             className="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
           >
             <option value="">Select an occasion</option>
@@ -92,6 +102,7 @@ export function BookingForm() {
             <option value="business">Business</option>
             <option value="other">Other</option>
           </select>
+          {errors.occasion && <span className="text-red-600">{errors.occasion.message}</span>}
         </div>
 
         <Button type="submit" className="w-full py-4 text-lg">
